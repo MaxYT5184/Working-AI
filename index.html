@@ -2,13 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>AI Chat with Full Letter Logic</title>
+  <title>AI Chat Builder</title>
   <style>
     body {
       margin: 0;
-      padding: 0;
-      background: linear-gradient(to right, #dbe6f6, #c5796d);
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #3a6186, #89253e);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -17,25 +16,23 @@
 
     .chat-container {
       background: #fff;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
       width: 400px;
-      max-width: 90%;
+      max-width: 95%;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      overflow: hidden;
     }
 
     .chat-box {
-      height: 250px;
+      height: 300px;
       overflow-y: auto;
-      border: 1px solid #ccc;
-      padding: 10px;
-      border-radius: 10px;
-      background-color: #f4f4f4;
-      margin-bottom: 10px;
+      padding: 20px;
+      background: #f5f5f5;
+      border-bottom: 1px solid #ccc;
     }
 
     .chat-box div {
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .user {
@@ -46,22 +43,29 @@
       color: #28a745;
     }
 
+    .input-area {
+      display: flex;
+      padding: 15px;
+      background: #fff;
+    }
+
     input[type="text"] {
-      width: 70%;
+      flex: 1;
       padding: 10px;
-      font-size: 14px;
-      border-radius: 5px;
+      border-radius: 8px;
       border: 1px solid #ccc;
+      font-size: 15px;
     }
 
     button {
-      padding: 10px 15px;
+      padding: 10px 14px;
       margin-left: 10px;
-      background-color: #007bff;
-      color: white;
       border: none;
-      border-radius: 5px;
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 8px;
       cursor: pointer;
+      font-size: 15px;
     }
 
     button:hover {
@@ -69,50 +73,64 @@
     }
 
     .reaction {
-      margin-left: 5px;
-      font-size: 16px;
+      margin-left: 6px;
+      font-size: 18px;
     }
   </style>
 </head>
 <body>
-  <div class="chat-container">
-    <div class="chat-box" id="chat-box"></div>
-    <input type="text" id="user-input" placeholder="Type here...">
+
+<div class="chat-container">
+  <div class="chat-box" id="chat-box"></div>
+  <div class="input-area">
+    <input type="text" id="user-input" placeholder="Say something..." />
     <button onclick="sendMessage()">Send</button>
   </div>
+</div>
 
-  <script>
-    const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const numbers = "0123456789";
+<script>
+  const chatBox = document.getElementById("chat-box");
+  const input = document.getElementById("user-input");
 
-    // Construct a word using only available letters
-    function buildWord(word) {
-      let allChars = letters + numbers;
-      let output = "Y"; // Prefix as you suggested
-      for (let i = 0; i < allChars.length; i++) {
-        output += allChars[i];
-      }
-      return output;
+  function getAIResponse(userMessage) {
+    const msg = userMessage.toLowerCase();
+
+    // Match some simple messages to responses
+    if (msg.includes("hi") || msg.includes("hello")) {
+      return "Hello there! 😊";
+    } else if (msg.includes("how are you")) {
+      return "I'm just code, but I'm doing great! 🤖";
+    } else if (msg.includes("bye")) {
+      return "Goodbye! Have a great day! 👋";
+    } else if (msg.includes("thanks") || msg.includes("thank you")) {
+      return "You're welcome! 🙌";
+    } else {
+      return "I'm still learning! 😅 Try saying 'hi' or 'how are you'.";
     }
+  }
 
-    function sendMessage() {
-      const input = document.getElementById("user-input");
-      const chatBox = document.getElementById("chat-box");
-      const userText = input.value.trim();
-      if (!userText) return;
+  function sendMessage() {
+    const userText = input.value.trim();
+    if (!userText) return;
 
-      chatBox.innerHTML += `<div class="user"><strong>You:</strong> ${userText}</div>`;
+    // Show user message
+    chatBox.innerHTML += `<div class="user"><strong>You:</strong> ${userText}</div>`;
 
-      // Build AI response using all letters and numbers
-      const aiResponse = buildWord(userText);
+    // Get AI response
+    const aiReply = getAIResponse(userText);
+    setTimeout(() => {
+      chatBox.innerHTML += `<div class="ai"><strong>AI:</strong> ${aiReply}</div>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }, 500);
 
-      setTimeout(() => {
-        chatBox.innerHTML += `<div class="ai"><strong>AI:</strong> ${aiResponse} <span class="reaction">🤖</span></div>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
-      }, 500);
+    input.value = "";
+  }
 
-      input.value = "";
-    }
-  </script>
+  // Press enter to send
+  input.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") sendMessage();
+  });
+</script>
+
 </body>
 </html>
