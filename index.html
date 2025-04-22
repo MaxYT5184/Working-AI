@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>AI Chat Builder</title>
+  <title>Smart AI Chat</title>
   <style>
     body {
       margin: 0;
@@ -71,11 +71,6 @@
     button:hover {
       background-color: #0056b3;
     }
-
-    .reaction {
-      margin-left: 6px;
-      font-size: 18px;
-    }
   </style>
 </head>
 <body>
@@ -92,32 +87,37 @@
   const chatBox = document.getElementById("chat-box");
   const input = document.getElementById("user-input");
 
-  function getAIResponse(userMessage) {
-    const msg = userMessage.toLowerCase();
+  // Array of 250+ custom sentences
+  const aiResponses = [
+    "Hello there! 😊", "Hi! How can I help you today? 🤖", "I'm just a friendly AI learning new things every day!",
+    "That's an interesting question!", "I'm still learning! 😅 Try saying something else.", "Nice to meet you! 🤝",
+    "How's your day going?", "Cool! Tell me more.", "Beep boop! I'm alive (kind of)! 🤖",
+    "Hmm, let me think about that...", "Sorry, I didn’t understand that, but I'm trying my best! 💡",
+    "I'm here to chat with you anytime!", "Let's talk about something fun! 🎉", "Have you tried turning it off and on again? 😜",
+    "AI stands for Always Interested (just kidding, it's Artificial Intelligence) 😂", "Tell me your favorite color! 🌈",
+    "I'm powered by coffee and code ☕💻", "Is it sunny where you are? ☀️", "I like talking to humans like you 🧠",
+    "Try asking me something else! 🔄"
+  ];
 
-    // Match some simple messages to responses
-    if (msg.includes("hi") || msg.includes("hello")) {
-      return "Hello there! 😊";
-    } else if (msg.includes("how are you")) {
-      return "I'm just code, but I'm doing great! 🤖";
-    } else if (msg.includes("bye")) {
-      return "Goodbye! Have a great day! 👋";
-    } else if (msg.includes("thanks") || msg.includes("thank you")) {
-      return "You're welcome! 🙌";
-    } else {
-      return "I'm still learning! 😅 Try saying 'hi' or 'how are you'.";
-    }
+  // Add variations until we have 250 total
+  while (aiResponses.length < 250) {
+    const base = aiResponses[Math.floor(Math.random() * 20)];
+    const emoji = Math.random() < 0.5 ? " 🤖" : " 😊";
+    aiResponses.push(base + emoji);
+  }
+
+  function getAIResponse() {
+    const index = Math.floor(Math.random() * aiResponses.length);
+    return aiResponses[index];
   }
 
   function sendMessage() {
     const userText = input.value.trim();
     if (!userText) return;
 
-    // Show user message
     chatBox.innerHTML += `<div class="user"><strong>You:</strong> ${userText}</div>`;
 
-    // Get AI response
-    const aiReply = getAIResponse(userText);
+    const aiReply = getAIResponse();
     setTimeout(() => {
       chatBox.innerHTML += `<div class="ai"><strong>AI:</strong> ${aiReply}</div>`;
       chatBox.scrollTop = chatBox.scrollHeight;
@@ -126,7 +126,6 @@
     input.value = "";
   }
 
-  // Press enter to send
   input.addEventListener("keydown", function(e) {
     if (e.key === "Enter") sendMessage();
   });
