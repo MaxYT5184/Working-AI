@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>AI Chat</title>
+  <title>AI Chat with Full Letter Logic</title>
   <style>
     body {
       margin: 0;
       padding: 0;
-      background: linear-gradient(to right, #e0eafc, #cfdef3);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #dbe6f6, #c5796d);
+      font-family: Arial, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -16,68 +16,85 @@
     }
 
     .chat-container {
-      background: white;
-      width: 400px;
-      max-width: 90%;
+      background: #fff;
       padding: 20px;
       border-radius: 15px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      width: 400px;
+      max-width: 90%;
     }
 
     .chat-box {
       height: 250px;
       overflow-y: auto;
       border: 1px solid #ccc;
-      border-radius: 10px;
       padding: 10px;
+      border-radius: 10px;
+      background-color: #f4f4f4;
       margin-bottom: 10px;
-      background: #f9f9f9;
     }
 
     .chat-box div {
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
-    .chat-box .user {
+    .user {
       color: #007bff;
     }
 
-    .chat-box .ai {
+    .ai {
       color: #28a745;
     }
 
     input[type="text"] {
       width: 70%;
       padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
       font-size: 14px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
     }
 
     button {
       padding: 10px 15px;
       margin-left: 10px;
-      border: none;
-      border-radius: 6px;
       background-color: #007bff;
       color: white;
-      font-weight: bold;
+      border: none;
+      border-radius: 5px;
       cursor: pointer;
     }
 
     button:hover {
       background-color: #0056b3;
     }
+
+    .reaction {
+      margin-left: 5px;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
   <div class="chat-container">
-    <div id="chat-box" class="chat-box"></div>
-    <input type="text" id="user-input" placeholder="Say something...">
+    <div class="chat-box" id="chat-box"></div>
+    <input type="text" id="user-input" placeholder="Type here...">
     <button onclick="sendMessage()">Send</button>
   </div>
 
   <script>
+    const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const numbers = "0123456789";
+
+    // Construct a word using only available letters
+    function buildWord(word) {
+      let allChars = letters + numbers;
+      let output = "Y"; // Prefix as you suggested
+      for (let i = 0; i < allChars.length; i++) {
+        output += allChars[i];
+      }
+      return output;
+    }
+
     function sendMessage() {
       const input = document.getElementById("user-input");
       const chatBox = document.getElementById("chat-box");
@@ -85,36 +102,16 @@
       if (!userText) return;
 
       chatBox.innerHTML += `<div class="user"><strong>You:</strong> ${userText}</div>`;
-      input.value = "";
 
-      // Use all letters A-Z, a-z and numbers 0-9 in variables
-      let a="H", b="o", c="w", d=" ", e="a", f="r", g="e", h="y", i="o", j="u", k="?", 
-          l="I", m="'", n="m", o="f", p="i", q="n", r="e", s=".", t="h", u="e", v="l", w="l", 
-          x="c", y="d", z="s";
-
-      let A="W", B="e", C="l", D="c", E="o", F="m", G="!", H="😊", I="Y", J="a", K="b", L="c", 
-          M="d", N="e", O="f", P="g", Q="h", R="i", S="j", T="k", U="l", V="m", W="n", X="o", Y="p", Z="q";
-
-      let n0=0, n1=1, n2=2, n3=3, n4=4, n5=5, n6=6, n7=7, n8=8, n9=9;
-
-      // Use them all to make responses
-      const responses = [
-        `${a+b+c+d+e+f+g+d+h+i+j+k}`,   // "How are you?"
-        `${l+m+n+d+o+p+q+f+g+s}`,       // "I'm fine."
-        `${A+B+C+D+E+F+G}`,             // "Welcome!"
-        `${l+m+d+t+h+e+d+A+B+C}`,       // "I'm the Wel"
-        `${I+J+K+L+M+N+O+P+Q+R+S+T+U+V+W+X+Y+Z}`, // All A-Z variables
-        `Using: ${n0},${n1},${n2},${n3},${n4},${n5},${n6},${n7},${n8},${n9}`, // numbers 0-9
-        `${l+d+t+h+a+n+k+d+y+o+u+d+H}`  // "I thank you 😊"
-      ];
-
-      // Random response
-      const aiText = responses[Math.floor(Math.random() * responses.length)];
+      // Build AI response using all letters and numbers
+      const aiResponse = buildWord(userText);
 
       setTimeout(() => {
-        chatBox.innerHTML += `<div class="ai"><strong>AI:</strong> ${aiText}</div>`;
+        chatBox.innerHTML += `<div class="ai"><strong>AI:</strong> ${aiResponse} <span class="reaction">🤖</span></div>`;
         chatBox.scrollTop = chatBox.scrollHeight;
       }, 500);
+
+      input.value = "";
     }
   </script>
 </body>
